@@ -1,0 +1,35 @@
+{
+  "extends": [
+    "airbnb"
+  ],
+  "parser": "babel-eslint",
+  "plugins": [
+    "graphql"
+  ],
+  "globals": {
+    "__CLIENT__": true,
+    "__SERVER__": true,
+    "__DEVELOPMENT__": true
+  },
+  "env": {
+    "browser": true,
+    "node": true,
+    "jest": true
+  },
+  "rules": {
+    "import/prefer-default-export": 0
+  },
+  "settings": {
+    "import/resolver": {
+      "babel-module": {
+        "extensions": [
+          ".js", ".jsx", ".json",
+          ".css", ".gql", "jpg",
+          "png", "gif", "eot", "ico",
+          "svg", "ttf", "woff", "woff2",
+          "eot", "wav", "mp3", "mp4", "webm"
+        ]
+      }
+    }
+  }
+}

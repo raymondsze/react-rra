@@ -1,0 +1,43 @@
+{
+  "presets": ["env", "stage-0", "react"],
+  "plugins": [
+    "transform-decorators-legacy",
+    "syntax-dynamic-import",
+    "dynamic-import-node",
+    ["react-intl", {
+      "messagesDir": "./build/messages/"
+    }],
+    ["module-resolver", {
+      "root": ["./"],
+      "extensions": [
+        ".js", ".jsx", ".json",
+        ".css", ".gql", "jpg",
+        "png", "gif", "eot", "ico",
+        "svg", "ttf", "woff", "woff2",
+        "eot", "wav", "mp3", "mp4", "webm"
+      ],
+      "alias": {
+        "~": "./src"
+      }
+    }]
+  ],
+  "env": {
+    "production": {
+      "presets": ["react-optimize"],
+      "plugins": [
+        ["styled-components", {
+          "ssr": true,
+          "minify": true
+        }]
+      ]
+    },
+    "development": {
+      "presets": [
+        "react-hmre"
+      ],
+      "plugins": [
+        "react-hot-loader/babel"
+      ]
+    }
+  }
+}

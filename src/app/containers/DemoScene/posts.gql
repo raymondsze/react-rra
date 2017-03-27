@@ -1,0 +1,11 @@
+query($cursor: ID) {
+  posts(cursor: $cursor) {
+    cursor
+      posts {
+      id
+      title
+      subtitle
+      author
+    }
+  }
+}
