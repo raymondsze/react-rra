@@ -4,8 +4,8 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "precommit": "npm lint && npm lint:css && npm test",
-    "prepush": "npm lint && npm lint:css && npm test",
+    "precommit": "npm run lint && npm run lint:css && npm run test",
+    "prepush": "npm run lint && npm run lint:css && npm run test",
     "start": "node ./build/server/main.js",
     "develop": "nodemon ./build/server/main.js | ./node_modules/.bin/bunyan",
     "build-client": "babel-node node_modules/.bin/webpack --config ./webpack/webpack.config-client.js",
