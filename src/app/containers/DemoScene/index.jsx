@@ -1,7 +1,15 @@
 import React, { PureComponent, PropTypes } from 'react';
 import { graphql } from 'react-apollo';
+import { defineMessages } from 'react-intl';
 import { Button, Card, Image, Icon } from 'semantic-ui-react';
 import postsQuery from './posts.gql';
+
+defineMessages({
+  message: {
+    id: 'message.id',
+    defaultMessage: 'some default message',
+  },
+});
 
 @graphql(postsQuery, {
   props({ data: { loading, posts, fetchMore } }) {

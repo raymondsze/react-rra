@@ -4,6 +4,10 @@
     "transform-decorators-legacy",
     "syntax-dynamic-import",
     "dynamic-import-node",
+    ["styled-components", {
+      "ssr": true,
+      "minify": false
+    }],
     ["react-intl", {
       "messagesDir": "./build/messages/"
     }],

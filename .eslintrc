@@ -17,7 +17,13 @@
     "jest": true
   },
   "rules": {
-    "import/prefer-default-export": 0
+    "import/prefer-default-export": 0,
+    "graphql/template-strings": [
+      "error", {
+        "env": "literal",
+        "schemaJsonFilepath": "schema.json"
+      }
+    ]
   },
   "settings": {
     "import/resolver": {

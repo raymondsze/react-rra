@@ -77,5 +77,10 @@ jspm_packages
 # Ignore the build folder
 build
 
+# Ignore the script generated stuffs
+schema.json
+schema.gql
+stats.json
+
 # Ignore .rdb files
 *.rdb
