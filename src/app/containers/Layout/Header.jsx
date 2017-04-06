@@ -2,6 +2,7 @@ import React, { PureComponent } from 'react';
 import styled from 'styled-components';
 import { Button, Icon, Menu, Divider, Image } from 'semantic-ui-react';
 import classnames from 'classnames';
+import logo from './logo.png';
 
 const StyledHeader = styled.header`
   padding-left: 20px;
@@ -137,7 +138,7 @@ class Header extends PureComponent {
           <div className="nav-left">
             <a className="nav-home">
               <span className="brand">
-                REACT ETC
+                <img role="presentation" alt="React-Redux-Apollo-Example" style={{ height: 50 }} src={logo} />
               </span>
             </a>
           </div>

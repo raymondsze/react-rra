@@ -15,26 +15,28 @@ defineMessages({
   props({ data: { loading, posts, fetchMore } }) {
     return {
       loading,
-      cursor: posts.cursor,
-      posts: posts.posts,
-      loadMoreEntries() {
-        return fetchMore({
-          query: postsQuery,
-          variables: {
-            cursor: posts.cursor,
-          },
-          updateQuery: (prevResult, { fetchMoreResult }) => {
-            const previousPosts = prevResult.posts.posts;
-            const newPosts = fetchMoreResult.posts.posts;
-            return {
-              posts: {
-                cursor: fetchMoreResult.cursor,
-                posts: [...previousPosts, ...newPosts],
-              },
-            };
-          },
-        });
-      },
+      ...!loading ? {
+        cursor: posts.cursor,
+        posts: posts.posts,
+        loadMoreEntries() {
+          return fetchMore({
+            query: postsQuery,
+            variables: {
+              cursor: posts.cursor,
+            },
+            updateQuery: (prevResult, { fetchMoreResult }) => {
+              const previousPosts = prevResult.posts.posts;
+              const newPosts = fetchMoreResult.posts.posts;
+              return {
+                posts: {
+                  cursor: fetchMoreResult.cursor,
+                  posts: [...previousPosts, ...newPosts],
+                },
+              };
+            },
+          });
+        },
+      } : null,
     };
   },
 })

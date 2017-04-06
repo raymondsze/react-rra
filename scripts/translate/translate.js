@@ -1,12 +1,10 @@
-/* eslint-disable import/no-extraneous-dependencies */
-import Promise from 'bluebird';
-import path from 'path';
 import fs from 'fs';
+import path from 'path';
+import Promise from 'bluebird';
+/* eslint-disable import/no-extraneous-dependencies */
 import { sync as globSync } from 'glob';
 import { sync as delSync } from 'del';
-
-import '~/../scripts/translate/lib/translator';
-import translate from '~/../scripts/translate/lib/google-translate';
+/* eslint-enable import/no-extraneous-dependencies */
 import translations from '~/app/translations';
 
 const TRANSLATIONS_DIR = path.join(process.cwd(), 'src/app/translations');
@@ -21,13 +19,12 @@ console.log(`Target languages: ${LANGUAGE_SUPPORTS}`); // eslint-disable-line no
   1. get supporting language
   2. grab all the messages from build folder (MESSAGES_PATTERN)
      which generated from babel-react-intl plugin
-  3. for each message per langauge, google translate the message if not exists
+  3. for each message per langauge, copy the message if not exists
      in translation folder (TRANSLATIONS_DIR)
   4. generate the message to the lang folder (LANG_DIR)
      which would be required when starting server
   5. clone the messages back to translation folder (TRANSLATIONS_DIR)
 */
-
 const messages = LANGUAGE_SUPPORTS.reduce((result, sup) => {
   const _result = result; // eslint-disable-line
   _result[sup] = {};
@@ -48,33 +45,13 @@ globSync(path.resolve(process.cwd(), MESSAGES_PATTERN))
       hashSet.add(id);
       LANGUAGE_SUPPORTS.forEach((sup) => {
         const trans = translations[sup] && translations[sup][id];
-        messages[sup][id] = {
-          id,
-          promise: trans === undefined ?
-            translate(defaultMessage, 'en', LANGUAGE_MAPPINGS[sup] ? LANGUAGE_MAPPINGS[sup] : sup) : trans,
-        };
+        messages[sup][id] = defaultMessage;
       });
     });
   }, {});
 
 // write the messages to corresponding folders
-(async () => {
-  const finalMessages = {};
-  await Promise.each(LANGUAGE_SUPPORTS, async (sup) => {
-    finalMessages[sup] = await Promise.mapSeries(
-      Object.values(messages[sup]), async ({ id, promise }) => {
-        const msg = await promise;
-        return { id, msg };
-      });
-    finalMessages[sup] = finalMessages[sup].reduce((result, { id, msg }) => {
-      const _result = result; // eslint-disable-line
-      _result[id] = msg;
-      return _result;
-    }, {});
-    return finalMessages;
-  });
-  Object.entries(finalMessages).forEach(([sup, msgs]) => {
-    fs.writeFileSync(path.resolve(__dirname, `${TRANSLATIONS_DIR}/${sup}.json`),
-      JSON.stringify({ ...translations[sup], ...msgs }, null, 2));
-  });
-})();
+Object.entries(messages).forEach(([sup, msgs]) => {
+  fs.writeFileSync(path.resolve(__dirname, `${TRANSLATIONS_DIR}/${sup}.json`),
+  JSON.stringify({ ...translations[sup], ...msgs }, null, 2));
+});

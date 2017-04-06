@@ -41,6 +41,7 @@ const assetsFilePath = path.join(process.cwd(), 'build/webpack-assets.json');
 function clientBuilt(callback) {
   fs.access(assetsFilePath, fs.F_OK, (err) => {
     if (!err) {
+      import('clear').then(clear => clear());
       fs.readFile(assetsFilePath, { encoding: 'utf-8' }, (error, data) => {
         callback(JSON.parse(data));
       });
@@ -124,9 +125,7 @@ clientBuilt((assets) => {
         const { ApolloProvider, getDataFromTree } = await import('react-apollo');
         const { default: createApolloClient } = await import('~/app/redux/apolloClient');
         const { default: configureStore } = await import('~/app/redux/store');
-        // routes component
-        const { default: routes } = await import('~/app/routes');
-        const { default: Root } = await import('~/app/containers/Root');
+        const { default: App } = await import('~/app/containers/App');
         // const { createNetworkInterface } = await import('apollo-client');
         const serialize = await import('serialize-javascript');
         const { createLocalInterface } = await import('apollo-local-query');
@@ -146,25 +145,22 @@ clientBuilt((assets) => {
           apolloClient,
           history: memoryHistory,
         });
-        const root = (
-          <Root apolloClient={apolloClient} store={store}>
-            <ConnectedRouter history={memoryHistory}>
-              {routes}
-            </ConnectedRouter>
-          </Root>
+        const router = (
+          <ConnectedRouter history={memoryHistory}>
+            <App />
+          </ConnectedRouter>
         );
         const asyncContext = createAsyncContext();
         const apolloProvider = (
           <AsyncComponentProvider asyncContext={asyncContext}>
             <ApolloProvider client={apolloClient} store={store}>
-              {root}
+              {router}
             </ApolloProvider>
           </AsyncComponentProvider>
         );
         await asyncBootstrapper(apolloProvider);
         await getDataFromTree(apolloProvider);
         const asyncState = asyncContext.getState();
-
         await store.dispatch(END);
         await Promise.all(store.asyncTasks.map(task => task.done));
         /* eslint-enable react/no-danger */

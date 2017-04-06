@@ -8,6 +8,9 @@ import AssetsPlugin from 'assets-webpack-plugin';
 import CircularDependencyPlugin from 'circular-dependency-plugin';
 // https://github.com/NekR/offline-plugin
 import OfflinePlugin from 'offline-plugin';
+// load the environment variable default value from .env file
+import dotenv from 'dotenv';
+dotenv.config();
 
 export default ({ dev } = { dev: false }) => ({
   // target environment
@@ -158,6 +161,7 @@ export default ({ dev } = { dev: false }) => ({
       __DEVELOPMENT__: dev,
       'process.env': {
         NODE_ENV: JSON.stringify(process.env.NODE_ENV || 'development'),
+        LANGUAGES: JSON.stringify(process.env.LANGUAGES),
       },
     }),
     // vendor js, the entry point named vendor will be bundled as a separate js

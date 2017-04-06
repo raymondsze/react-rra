@@ -9,10 +9,37 @@ import { createNetworkInterface } from 'apollo-client';
 import { ConnectedRouter } from 'react-router-redux';
 import createApolloClient from '~/app/redux/apolloClient';
 import configureStore from '~/app/redux/store';
-import Root from '~/app/containers/Root';
-import routes from '~/app/routes';
+import App from '~/app/containers/App';
+import { addLocaleData } from 'react-intl';
+import areIntlLocalesSupported from 'intl-locales-supported';
 
-async function startApp() {
+// Add other language supports here
+const LANGUAGE_SUPPORTS = JSON.parse(process.env.LANGUAGES);
+const loadLocaleData = async () => {
+  // only static path could let webpack dynamic import
+  /* ********** Add Your Locale Data Here if LANGUAGE_SUPPORTS Changed ********** */
+  await import('react-intl/locale-data/en').then(addLocaleData);
+};
+
+async function initIntl() {
+  if (global.Intl) {
+    // Determine if the built-in `Intl` has the locale data we need.
+    if (!areIntlLocalesSupported(LANGUAGE_SUPPORTS)) {
+      // `Intl` exists, but it doesn't have the data we need, so load the
+      // polyfill and replace the constructors with need with the polyfill's.
+      const IntlPolyfill = require('intl'); // eslint-disable-line
+      await loadLocaleData();
+      Intl.NumberFormat = IntlPolyfill.NumberFormat;
+      Intl.DateTimeFormat = IntlPolyfill.DateTimeFormat;
+    }
+  } else {
+    // No `Intl`, so use and load the polyfill.
+    global.Intl = require('intl'); // eslint-disable-line
+  }
+}
+
+async function startApp(TheApp) {
+  await initIntl();
   const history = createHistory();
   const $root = document.getElementById('react-root');
   const networkInterface = createNetworkInterface({
@@ -44,26 +71,24 @@ async function startApp() {
         asyncContext={asyncContext}
       >
         <ApolloProvider client={apolloClient} store={store}>
-          <Root>
-            <ConnectedRouter
-              key={module.hot ? new Date() : undefined}
-              history={history}
-            >
-              {routes}
-            </ConnectedRouter>
-          </Root>
+          <ConnectedRouter
+            history={history}
+          >
+            <TheApp />
+          </ConnectedRouter>
         </ApolloProvider>
       </AsyncComponentProvider>
     </AppContainer>
   );
   await asyncBootstrapper(app);
   ReactDOM.render(app, $root);
-  /* istanbul ignore next */
-  if (module.hot) {
-    module.hot.accept(() => {
-      ReactDOM.render(app, $root);
-    });
-  }
 }
 
-startApp();
+startApp(App);
+
+/* istanbul ignore next */
+if (module.hot) {
+  module.hot.accept('./containers/App', () => {
+    startApp(require('./containers/App').default); // eslint-disable-line global-require
+  });
+}

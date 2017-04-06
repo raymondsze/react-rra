@@ -7,7 +7,7 @@ const routes = (
     <Route
       path="/"
       component={asyncComponent({
-        resolve: () => import('~/app/containers/DemoScene'),
+        resolve: () => import('~/app/containers/IndexScene'),
       })}
     />
   </Switch>
