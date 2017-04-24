@@ -4,13 +4,9 @@
   ],
   "parser": "babel-eslint",
   "plugins": [
-    "graphql"
+    "graphql",
+    "redux-saga"
   ],
-  "globals": {
-    "__CLIENT__": true,
-    "__SERVER__": true,
-    "__DEVELOPMENT__": true
-  },
   "env": {
     "browser": true,
     "node": true,
