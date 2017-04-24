@@ -5,7 +5,7 @@
   "license": "MIT",
   "scripts": {
     "postinstall": "npm-run-all --parallel script:schema script:translate",
-    "prepush": "npm-run-all translate schema lint test",
+    "prepush": "npm-run-all script:schema script:translate lint test",
     "script:translate": "babel-node ./internals/scripts/translate en zh-Hans zh-Hant",
     "script:schema": "babel-node ./internals/scripts/schema",
     "script:stats": "babel-node node_modules/.bin/webpack --config ./internals/webpack/webpack.config-client.js --profile --json > stats.json && node_modules/.bin/webpack-bundle-analyzer stats.json build/client",
@@ -123,6 +123,7 @@
     "eslint-plugin-import": "^2.2.0",
     "eslint-plugin-jsx-a11y": "^4.0.0",
     "eslint-plugin-react": "^6.10.3",
+    "eslint-plugin-redux-saga": "^0.3.0",
     "eventsource-polyfill": "^0.9.6",
     "exports-loader": "^0.6.4",
     "extract-text-webpack-plugin": "^2.1.0",
