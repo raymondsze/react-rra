@@ -1,3 +1,5 @@
+/* eslint-disable import/no-extraneous-dependencies */
+
 import path from 'path';
 // Input schema validation
 import Joi from 'joi';
